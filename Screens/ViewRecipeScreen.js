@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Text , View , StyleSheet} from 'react-native'
+import {Text , View , StyleSheet , TouchableOpacity} from 'react-native'
 import AppHeader from '../components/AppHeader'
 import {Card} from 'react-native-elements'
 import firebase from 'firebase'
@@ -18,10 +18,11 @@ export default class ViewRecipeScreen extends React.Component{
             name:"",
             contact:"",
         }
+        this.requestref=null
     }
 
     getdetails=async()=>{
-        await db.collection("users").where("email_id","==",this.state.email).get()
+    this.requestref = await db.collection("users").where("email_id","==",this.state.email).get()
         .then((response)=>{
             response.forEach((doc)=>{
                 var ref = doc.data()
@@ -29,6 +30,24 @@ export default class ViewRecipeScreen extends React.Component{
                               contact:ref.contact})
             })
         })
+    }
+
+    addMyRecipe=async()=>{
+        await db.collection("my_recipe").add({
+            "recipe_name":this.state.recipeName,
+            "ingredients":this.state.ingredients,
+            "procedure":this.state.procedure,
+            "user_id":this.state.userId,
+        })
+        alert("You Saved This recipe")
+    }
+
+    componentDidMount=()=>{
+        this.getdetails()
+    }
+
+    componentWillUnmount=()=>{
+        this.requestref
     }
 
     render(){
@@ -62,6 +81,11 @@ export default class ViewRecipeScreen extends React.Component{
                         </Card>
                     </Card>
                 </View>
+                <TouchableOpacity 
+                onPress={()=>{this.addMyRecipe()}}
+                style={styles.button}>
+                    <Text style={styles.buttonText}> Save </Text>
+                </TouchableOpacity>
             </View>
         )
     }
@@ -72,5 +96,28 @@ const styles = StyleSheet.create({
         fontSize:30,
         textAlign:"center",
         color:"green"
-    }
+    },
+    button:{
+        width:300,
+        height:50,
+        justifyContent:'center',
+        alignItems:'center',
+        borderRadius:25,
+        backgroundColor:"#7cf502",
+        shadowColor: "#000",
+        shadowOffset: {
+           width: 0,
+           height: 8,
+        },
+        shadowOpacity: 0.30,
+        shadowRadius: 10.32,
+        elevation: 16,
+        padding: 10,
+        alignSelf:"center"
+      },
+      buttonText:{
+        color:'#ffff',
+        fontWeight:'200',
+        fontSize:20
+      }
 })

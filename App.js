@@ -1,9 +1,8 @@
 import React from 'react';
-import { Image } from 'react-native';
 import {createSwitchNavigator,createAppContainer} from 'react-navigation' 
 import LoginScreen from './Screens/LoginScreen'
 import TabNavigator from './components/TabNavigator'
-import ViewRecipeScreen from './Screens/ViewRecipeScreen';
+import DrawerNavigator from "./components/DrawerNavigator";
 
 export default function App() {
   return (
@@ -13,6 +12,7 @@ export default function App() {
 
 const SwitchNavigator = createSwitchNavigator({
   Login:{screen:LoginScreen},
+  DrawerNavigator:{screen: DrawerNavigator},
   TabNavigator:{screen:TabNavigator}
 })
 

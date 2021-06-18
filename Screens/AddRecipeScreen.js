@@ -3,10 +3,15 @@ import {View,
     Text , 
     TextInput ,
     TouchableOpacity ,
-    StyleSheet} from 'react-native'
+    StyleSheet,
+    Pressable,
+    Image
+} from 'react-native'
 import firebase from 'firebase'
 import db from '../Config'
 import AppHeader from '../components/AppHeader'
+import {Avatar} from 'react-native-elements'
+import * as ImagePicker from 'expo-image-picker'
 
 export default class AddRecipeScreen extends React.Component{
 constructor(){
@@ -16,7 +21,8 @@ constructor(){
         ingredients:"",
         procedure:"",
         userId:firebase.auth().currentUser.email,
-        Id:0
+        Id:0,
+        imageName:""
     }
 }
 
@@ -35,12 +41,15 @@ await db.collection("recipes_list").add({
  "recipe_id":"rec"+this.state.Id
 })
 alert('Your Recipe is Published') 
+this.props.navigation.navigate('Home')
 }
+
 
     render(){
         return(
             <View>
                 <AppHeader header="Publish The Recipe"/>
+
                 <TextInput
                 style={styles.input}
                 placeholder="Name of the Recipe"
